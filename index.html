@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8">
+<title>Print Tasks</title>
+<style>body{font-family:system-ui;margin:2rem;max-width:600px}textarea{width:100%;height:120px}</style>
+<h1>Quittungs-Druck</h1>
+<label>Titel <input id="title" value="MORGEN"></label><br><br>
+<label>Zeilen (eine pro Zeile)</label><br>
+<textarea id="lines">Lesen – 10 Min</textarea><br>
+<button id="btn">Drucken</button>
+<pre id="out"></pre>
+<script>
+const API = "https://DEINE-BACKEND-URL/print";
+const KEY = "DEIN_API_KEY"; // NICHT veröffentlichen, besser per .env bei gehostetem Frontend
+document.getElementById('btn').onclick = async () => {
+  const title = document.getElementById('title').value.trim() || "TASKS";
+  const lines = document.getElementById('lines').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json','x-api-key':KEY},
+    body: JSON.stringify({title, lines, cut:true})});
+  document.getElementById('out').textContent = await r.text();
+};
+</script>
